@@ -11,6 +11,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(name = "users")
 @NamedQueries(
@@ -34,6 +36,13 @@ public class Users {
 
     @Column(name = "phone", nullable = false)
     private String phone;
+    
+    @Column(name = "token", nullable = true)
+    private String token;
+    
+    @Column(name = "credit", precision=10, scale=2, nullable = true)
+    @ColumnDefault("0")
+    private double credit;
 
     public Users() {
     }
@@ -66,7 +75,23 @@ public class Users {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-    
+	
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public double getCredit() {
+		return credit;
+	}
+
+	public void setCredit(double credit) {
+		this.credit = credit;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) {

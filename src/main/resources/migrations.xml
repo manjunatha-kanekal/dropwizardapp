@@ -16,6 +16,12 @@
             <column name="phone" type="varchar(255)">
             	<constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="token" type="varchar(255)">
+            	<constraints nullable="true"/>
+            </column>
+            <column name="credit" type="float8">
+            	<constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>

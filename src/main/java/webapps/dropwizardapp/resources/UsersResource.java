@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import com.codahale.metrics.annotation.Timed;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import webapps.dropwizardapp.core.LoginResponse;
 import webapps.dropwizardapp.core.Users;
 import webapps.dropwizardapp.db.UsersDAO;
 
@@ -29,7 +30,7 @@ public class UsersResource {
     @Timed
     @Path("/register")
     @UnitOfWork
-    public Users createPerson(Users user) {
+    public Users createUser(Users user) {
         return userDAO.create(user);
     }
     
@@ -40,17 +41,27 @@ public class UsersResource {
     public List<Users> findUser(@QueryParam("phone") Optional<String> phone) {
     	if (phone.isPresent()) {
             return userDAO.findByPhone(phone.get());
-        } else {
+        } /* else {
             return userDAO.findAll();
-        }
+        }*/
+    	
+    	return null;
     }
 
     @GET
     @Timed
     @Path("/all")
     @UnitOfWork
-    public List<Users> listPeople() {
+    public List<Users> listUsers() {
         return userDAO.findAll();
+    }
+    
+    @POST
+    @Timed
+    @Path("/login")
+    @UnitOfWork
+    public LoginResponse login(Users user) {
+    	return userDAO.login(user.getPhone());
     }
 
 }
