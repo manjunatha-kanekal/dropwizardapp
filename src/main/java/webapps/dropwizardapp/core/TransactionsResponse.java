@@ -1,30 +1,25 @@
 package webapps.dropwizardapp.core;
 
-public class LoginResponse {
+public class TransactionsResponse {
+	private String transactionStatus;
 	private String message;
-	private String token;
 	private double credit;
-
+	
+	public String getTransactionStatus() {
+		return transactionStatus;
+	}
+	public void setTransactionStatus(String transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
 	public String getMessage() {
 		return message;
 	}
-
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public double getCredit() {
 		return credit;
 	}
-
 	public void setCredit(double credit) {
 		this.credit = credit;
 	}

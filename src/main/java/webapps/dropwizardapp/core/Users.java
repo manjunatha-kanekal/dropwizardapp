@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -24,6 +25,10 @@ import org.hibernate.annotations.ColumnDefault;
         @NamedQuery(
             name = "webapps.dropwizardapp.core.Users.findByPhone",
             query = "SELECT u FROM Users u where u.phone =:phone"
+        ),
+        @NamedQuery(
+            name = "webapps.dropwizardapp.core.Users.findByToken",
+            query = "SELECT u FROM Users u where u.token =:token"
         )
     })
 public class Users {
@@ -35,6 +40,7 @@ public class Users {
     private String fullName;
 
     @Column(name = "phone", nullable = false)
+    @Pattern(regexp="(^$|[0-9]{10})")
     private String phone;
     
     @Column(name = "token", nullable = true)

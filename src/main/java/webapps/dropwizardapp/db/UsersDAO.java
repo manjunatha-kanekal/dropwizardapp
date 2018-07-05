@@ -23,14 +23,24 @@ public class UsersDAO extends AbstractDAO<Users> {
         return persist(user);
     }
     
-    public List<Users> findAll() {
+    @SuppressWarnings("unchecked")
+	public List<Users> findAll() {
         return list(namedQuery("webapps.dropwizardapp.core.Users.findAll"));
     }
 
+	@SuppressWarnings("unchecked")
 	public List<Users> findByPhone(String phone) {
 		return list(
                 namedQuery("webapps.dropwizardapp.core.Users.findByPhone")
                 .setParameter("phone", phone)
+        );
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Users> findByToken(String token) {
+		return list(
+                namedQuery("webapps.dropwizardapp.core.Users.findByToken")
+                .setParameter("token", token)
         );
 	}
 
@@ -45,6 +55,23 @@ public class UsersDAO extends AbstractDAO<Users> {
 			create(u);
 			e.setMessage("Login Success!");
 			e.setToken(token);
+		} else {
+			e.setMessage("Phone number doesn't exists! Please register first");
+		}
+		
+		return e;
+	}
+
+	public LoginResponse topUp(Users user) {
+		LoginResponse e = new LoginResponse();
+		
+		List<Users> userList = findByPhone(user.getPhone());
+		if(userList != null && userList.size() > 0) {
+			Users u = userList.get(0);
+			u.setCredit(u.getCredit() + user.getCredit());
+			create(u);
+			e.setMessage("Topup Successful!");
+			e.setCredit(u.getCredit());
 		} else {
 			e.setMessage("Phone number doesn't exists! Please register first");
 		}

@@ -14,7 +14,7 @@ database:
   user: postgres
 
   # the password
-  password: #########
+  password: Royal@2405
 
   # the JDBC URL
   url: jdbc:postgresql://localhost:5432/epaylater

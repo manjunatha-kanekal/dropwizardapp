@@ -63,5 +63,13 @@ public class UsersResource {
     public LoginResponse login(Users user) {
     	return userDAO.login(user.getPhone());
     }
+    
+    @POST
+    @Timed
+    @Path("/topup")
+    @UnitOfWork
+    public LoginResponse topUp(Users user) {
+        return userDAO.topUp(user);
+    }
 
 }
