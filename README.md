@@ -7,7 +7,52 @@ How to start the dropwizardapp application
 1. Start application with `java -jar target/dropwizardapp-0.0.1-SNAPSHOT.jar server config.yml`
 1. To check that your application is running enter url `http://localhost:8080`
 
-Health Check
----
+# Resources
+1. `/register`
+    Type: Post
+    URL: `http://localhost:8080/register`
+    Request body: 
+    ```json
+    {
+      "fullName": "Test User",
+      "phone": "1234567890"
+    }
+    ```
+2. `/find`
+    Type: Get
+    URL: `http://localhost:8080/find?phone=1234567890`
 
-To see your applications health enter url `http://localhost:8081/healthcheck`
+3. `/all`
+    Type: Get
+    URL: `http://localhost:8080/all`
+
+4. `/login`
+    Type: Post
+    URL: `http://localhost:8080/login`
+    Request body: 
+    ```json
+    {
+      "phone": "8553538684"
+    }
+    ```
+5. `/txn/spend`
+    Type: Post
+    URL: `http://localhost:8080/txn/spend`
+    Request body: 
+    ```json
+    {
+      "amount": "900",
+      "description" : "1st Transaction",
+      "timestamp" : "{{current_timestamp}}"
+    }
+    ```
+6.  `/topup`
+    Type: Post
+    URL: `http://localhost:8080/topup`
+    Request body: 
+    ```json
+    {
+      "phone": "8553538684",
+      "credit": "900"
+    }
+    ```   

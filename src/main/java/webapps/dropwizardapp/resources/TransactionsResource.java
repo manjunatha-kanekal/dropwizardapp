@@ -2,9 +2,12 @@ package webapps.dropwizardapp.resources;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import com.codahale.metrics.annotation.Timed;
@@ -31,15 +34,17 @@ public class TransactionsResource {
     @Timed
     @Path("/spend")
     @UnitOfWork
-    public TransactionsResponse spend(Transactions txn) {
+    public TransactionsResponse spend(Transactions txn, @Context HttpServletRequest req) {
         
     	TransactionsResponse resp = new TransactionsResponse();
 		
-		List<Users> userList = userDAO.findByPhone(txn.getPhone());
+    	String token = req.getHeader(HttpHeaders.AUTHORIZATION);
+		List<Users> userList = userDAO.findByToken(token);
 		if(userList != null && userList.size() > 0) {
 			Users u = userList.get(0);
 			double credit = u.getCredit();
 			if(credit >= txn.getAmount()) {
+				txn.setPhone(u.getPhone());
 				txnDAO.create(txn);
 				u.setCredit(credit - txn.getAmount());
 				userDAO.create(u);
