@@ -40,7 +40,6 @@ public class AuthorizationFilter implements javax.servlet.Filter {
 			List<Users> userList = userDAO.findByToken(accessToken);
 			if(userList != null && userList.size() > 0) {
 				validToken = true;
-				((HttpServletRequest) request).setAttribute("phone", userList.get(0).getPhone());
 				chain.doFilter(request, response);
 			}
 			
