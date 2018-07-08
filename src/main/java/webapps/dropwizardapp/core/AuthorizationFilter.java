@@ -1,7 +1,6 @@
 package webapps.dropwizardapp.core;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -15,13 +14,19 @@ import javax.ws.rs.core.HttpHeaders;
 import org.eclipse.jetty.http.HttpStatus;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import webapps.dropwizardapp.db.UsersDAO;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class AuthorizationFilter implements javax.servlet.Filter {
 	
-	private final UsersDAO userDAO; 
+	/*private final UsersDAO userDAO;
 	public AuthorizationFilter(UsersDAO userDAO) {
 		this.userDAO = userDAO;
+	}*/
+	
+	private final JedisPool jedisPool;
+	public AuthorizationFilter(JedisPool jedisPool) {
+		this.jedisPool = jedisPool;
 	}
 
 	@Override
@@ -37,10 +42,19 @@ public class AuthorizationFilter implements javax.servlet.Filter {
 		
 		if(accessToken != null && !"".equals(accessToken.trim())) {
 
-			List<Users> userList = userDAO.findByToken(accessToken);
+			/*List<Users> userList = userDAO.findByToken(accessToken);
 			if(userList != null && userList.size() > 0) {
 				validToken = true;
 				chain.doFilter(request, response);
+			}*/
+			
+			/* Replacing with redis cache */
+			try (Jedis jedis = jedisPool.getResource()) {
+			    if(jedis.get(accessToken) != null) {
+			    	jedis.expire(accessToken, 300);
+			    	validToken = true;
+					chain.doFilter(request, response);
+			    }
 			}
 			
 		} 

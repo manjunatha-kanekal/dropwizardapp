@@ -57,7 +57,14 @@
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
 		</dependency>
-	
+		
+		<!-- https://mvnrepository.com/artifact/com.bendb.dropwizard/dropwizard-redis -->
+		<dependency>
+		    <groupId>com.bendb.dropwizard</groupId>
+		    <artifactId>dropwizard-redis</artifactId>
+		    <version>1.2.0-0</version>
+		</dependency>
+		
 	</dependencies>
 
     <build>
