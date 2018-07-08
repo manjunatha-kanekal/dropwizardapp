@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import com.codahale.metrics.annotation.Timed;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import redis.clients.jedis.Jedis;
 import webapps.dropwizardapp.core.Transactions;
 import webapps.dropwizardapp.core.TransactionsResponse;
 import webapps.dropwizardapp.core.Users;
@@ -34,12 +35,16 @@ public class TransactionsResource {
     @Timed
     @Path("/spend")
     @UnitOfWork
-    public TransactionsResponse spend(Transactions txn, @Context HttpServletRequest req) {
+    public TransactionsResponse spend(Transactions txn, @Context HttpServletRequest req, @Context Jedis jedis) {
         
     	TransactionsResponse resp = new TransactionsResponse();
 		
+    	/*String token = req.getHeader(HttpHeaders.AUTHORIZATION);
+		List<Users> userList = userDAO.findByToken(token);*/
+    	
     	String token = req.getHeader(HttpHeaders.AUTHORIZATION);
-		List<Users> userList = userDAO.findByToken(token);
+    	String phone = jedis.get(token);
+		List<Users> userList = userDAO.findByPhone(phone);
 		if(userList != null && userList.size() > 0) {
 			Users u = userList.get(0);
 			double credit = u.getCredit();

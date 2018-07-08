@@ -50,9 +50,9 @@ public class UsersDAO extends AbstractDAO<Users> {
 		List<Users> userList = findByPhone(phone);
 		if(userList != null && userList.size() > 0) {
 			String token = UUID.randomUUID().toString();
-			Users u = userList.get(0);
+			/*Users u = userList.get(0);
 			u.setToken(token);
-			create(u);
+			create(u);*/
 			e.setMessage("Login Success!");
 			e.setToken(token);
 		} else {

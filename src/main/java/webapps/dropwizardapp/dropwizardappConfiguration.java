@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.bendb.dropwizard.redis.JedisFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.dropwizard.Configuration;
@@ -20,6 +21,18 @@ public class dropwizardappConfiguration extends Configuration {
     @Valid
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
+    
+    @NotNull
+    @JsonProperty
+    private JedisFactory redis;
+
+    public JedisFactory getJedisFactory() {
+    	return redis;
+    }
+
+    public void setJedisFactory(JedisFactory jedisFactory) {
+    	this.redis = jedisFactory;
+    }
     
     @JsonProperty
 	public String getTemplate() {

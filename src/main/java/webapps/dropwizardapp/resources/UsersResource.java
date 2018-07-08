@@ -8,11 +8,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
 import io.dropwizard.hibernate.UnitOfWork;
+import redis.clients.jedis.Jedis;
 import webapps.dropwizardapp.core.LoginResponse;
 import webapps.dropwizardapp.core.Users;
 import webapps.dropwizardapp.db.UsersDAO;
@@ -20,6 +25,7 @@ import webapps.dropwizardapp.db.UsersDAO;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UsersResource.class);
 	private final UsersDAO userDAO;
 
     public UsersResource(UsersDAO userDAO) {
@@ -60,8 +66,16 @@ public class UsersResource {
     @Timed
     @Path("/login")
     @UnitOfWork
-    public LoginResponse login(Users user) {
-    	return userDAO.login(user.getPhone());
+    public LoginResponse login(Users user, @Context Jedis jedis) {
+		LoginResponse e = userDAO.login(user.getPhone());
+		if(jedis.hget("user#token", user.getPhone()) != null) {
+			jedis.del(jedis.hget("user#token", user.getPhone()));
+		}
+		jedis.set(e.getToken(), user.getPhone());
+		jedis.expire(e.getToken(), 300);
+		jedis.hset("user#token", user.getPhone(), e.getToken());
+    	LOGGER.info("redis token: " + jedis.get(e.getToken()));
+    	return e;
     }
     
     @POST
